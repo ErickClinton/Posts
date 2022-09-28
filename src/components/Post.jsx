@@ -34,6 +34,7 @@ export function Post({author, publishedAt,content}){
         setNewCommentText('')
     }
     function handleNewCommentChange(){
+        event.target.setCustomValidity('')
         setNewCommentText(event.target.value)
     }
     
@@ -42,9 +43,16 @@ export function Post({author, publishedAt,content}){
         const commentsWithoudDeletedOne=comment.filter(comment=>{
             return comment !== commentToDelete
         })
+        //Aqui estou atualizando a lista filtrada.
+        //Pode perceber que nunca acesso diretamente o valor, e sim vou autalizando com funções
         setComments(commentsWithoudDeletedOne);
     }
 
+    function handleNewCommentInvalid(){
+        event.target.setCustomValidity("Esse campo é obrigatório")
+    }
+
+    const ifNewCommentInputEmpty=newCommentText.length==0
     return( 
         <article className={styles.post}>
             <header>
@@ -77,9 +85,11 @@ export function Post({author, publishedAt,content}){
                     placeholder='Deixe um comentário'
                     value={newCommentText}
                     onChange={handleNewCommentChange}
+                    onInvalid={handleNewCommentInvalid}
+                    required
                 />
                 <footer>
-                    <button type="submit">Publicar</button>
+                    <button type="submit" disabled={ifNewCommentInputEmpty}>Publicar</button>
                 </footer>
             </form>
 
